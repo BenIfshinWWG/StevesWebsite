@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Citizen Intake Form — Denaturalization Defense Clearinghouse</title>
+  <meta name="description" content="Intake form to ask the Clearinghouse to try to find you a volunteer lawyer. Not legal advice; no attorney-client relationship is created." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container">
+      <p class="site-title">
+        <a href="index.html">
+          <span class="name">Denaturalization Defense Clearinghouse</span>
+          <span class="tagline">Connecting citizens facing denaturalization with volunteer lawyers</span>
+        </a>
+      </p>
+      <nav class="main-nav" aria-label="Primary">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="for-citizens.html" aria-current="page">For Citizens</a></li>
+          <li><a href="for-lawyers.html">For Lawyers</a></li>
+          <li><a href="about.html">About &amp; Disclaimer</a></li>
+          <li><a href="privacy.html">Privacy</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="container">
+      <h1>Citizen intake form</h1>
+      <p class="lead">
+        Use this form to ask the Clearinghouse to try to find you a volunteer lawyer. Fields
+        marked <span class="req" aria-hidden="true">*</span> (required) must be completed.
+      </p>
+      <p>
+        The information you share is sensitive. Please read our
+        <a href="privacy.html">Privacy Policy</a> to understand how it is stored, used, and
+        shared. If you have an urgent court deadline, seek legal help immediately and do not
+        rely solely on this Clearinghouse.
+      </p>
+
+      <form action="#" method="post" novalidate data-guard aria-describedby="disclaimer-above-submit">
+        <!-- CONTACT / IDENTITY -->
+        <fieldset>
+          <legend>Your contact information</legend>
+
+          <div class="field">
+            <label for="fullname">Full legal name <span class="req">*</span></label>
+            <input type="text" id="fullname" name="fullname" autocomplete="name" required />
+          </div>
+
+          <div class="field">
+            <label for="email">Email address <span class="req">*</span></label>
+            <input type="email" id="email" name="email" autocomplete="email" required />
+          </div>
+
+          <div class="field">
+            <label for="phone">Telephone number <span class="req">*</span></label>
+            <input type="tel" id="phone" name="phone" autocomplete="tel" required />
+          </div>
+
+          <div class="field">
+            <label for="location">Current location — city and state <span class="req">*</span></label>
+            <input type="text" id="location" name="location" autocomplete="address-level2" placeholder="e.g., Houston, Texas" required />
+          </div>
+
+          <div class="field">
+            <label for="language">Preferred language for communication</label>
+            <span class="hint" id="language-hint">Optional. Tell us if you would prefer to communicate in a language other than English.</span>
+            <input type="text" id="language" name="language" aria-describedby="language-hint" />
+          </div>
+
+          <div class="field">
+            <span class="label" id="contact-method-label" style="font-weight:600;display:block;margin-bottom:0.3rem;">Preferred method of contact <span class="req">*</span></span>
+            <div class="radio-group" role="radiogroup" aria-labelledby="contact-method-label">
+              <div class="radio-option">
+                <input type="radio" id="cm-email" name="contact_method" value="email" required />
+                <label for="cm-email">Email</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="cm-phone" name="contact_method" value="phone" />
+                <label for="cm-phone">Phone</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="cm-either" name="contact_method" value="either" />
+                <label for="cm-either">Either</label>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- CASE STATUS -->
+        <fieldset>
+          <legend>Your situation</legend>
+          <div class="field">
+            <span class="label" id="case-status-label" style="font-weight:600;display:block;margin-bottom:0.3rem;">Which best describes your situation? <span class="req">*</span></span>
+            <div class="radio-group" role="radiogroup" aria-labelledby="case-status-label">
+              <div class="radio-option">
+                <input type="radio" id="status-threat" name="case_status" value="threat" required />
+                <label for="status-threat">I have received a threat of denaturalization (no lawsuit filed yet).</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="status-sued" name="case_status" value="sued" />
+                <label for="status-sued">I have been sued / served with a civil denaturalization complaint.</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- CONDITIONAL: threat -->
+          <div class="conditional" data-show-when="case_status:threat" hidden>
+            <h3>About the threat</h3>
+
+            <div class="field">
+              <label for="threat-date">Date the threat was received</label>
+              <input type="date" id="threat-date" name="threat_date" />
+            </div>
+
+            <div class="field">
+              <label for="threat-how">How the threat was received</label>
+              <select id="threat-how" name="threat_how">
+                <option value="">Select one…</option>
+                <option value="uscis-notice">Letter / notice from USCIS</option>
+                <option value="doj-notice">Letter / notice from DOJ</option>
+                <option value="in-person">In-person or interview statement</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="field" id="threat-how-other-wrap">
+              <label for="threat-how-other">If "Other," please describe how</label>
+              <input type="text" id="threat-how-other" name="threat_how_other" />
+            </div>
+
+            <div class="field">
+              <label for="threat-desc">Brief description of the threat</label>
+              <span class="hint" id="threat-desc-hint">Optional.</span>
+              <textarea id="threat-desc" name="threat_desc" maxlength="1000" aria-describedby="threat-desc-hint threat-desc-count"></textarea>
+              <span class="char-count" id="threat-desc-count" aria-live="polite"></span>
+            </div>
+          </div>
+
+          <!-- CONDITIONAL: sued -->
+          <div class="conditional" data-show-when="case_status:sued" hidden>
+            <h3>About the lawsuit</h3>
+
+            <div class="field">
+              <label for="district">Federal district court in which the case was filed</label>
+              <span class="hint" id="district-hint">Start typing to search the 94 federal judicial districts, or type your own if you are not sure.</span>
+              <input type="search" id="district" name="district" list="districts" aria-describedby="district-hint" />
+              <datalist id="districts">
+                <option value="U.S. District Court, Northern District of Alabama"></option>
+                <option value="U.S. District Court, Middle District of Alabama"></option>
+                <option value="U.S. District Court, Southern District of Alabama"></option>
+                <option value="U.S. District Court, District of Alaska"></option>
+                <option value="U.S. District Court, District of Arizona"></option>
+                <option value="U.S. District Court, Eastern District of Arkansas"></option>
+                <option value="U.S. District Court, Western District of Arkansas"></option>
+                <option value="U.S. District Court, Northern District of California"></option>
+                <option value="U.S. District Court, Eastern District of California"></option>
+                <option value="U.S. District Court, Central District of California"></option>
+                <option value="U.S. District Court, Southern District of California"></option>
+                <option value="U.S. District Court, District of Colorado"></option>
+                <option value="U.S. District Court, District of Connecticut"></option>
+                <option value="U.S. District Court, District of Delaware"></option>
+                <option value="U.S. District Court, District of Columbia"></option>
+                <option value="U.S. District Court, Northern District of Florida"></option>
+                <option value="U.S. District Court, Middle District of Florida"></option>
+                <option value="U.S. District Court, Southern District of Florida"></option>
+                <option value="U.S. District Court, Northern District of Georgia"></option>
+                <option value="U.S. District Court, Middle District of Georgia"></option>
+                <option value="U.S. District Court, Southern District of Georgia"></option>
+                <option value="U.S. District Court, District of Guam"></option>
+                <option value="U.S. District Court, District of Hawaii"></option>
+                <option value="U.S. District Court, District of Idaho"></option>
+                <option value="U.S. District Court, Northern District of Illinois"></option>
+                <option value="U.S. District Court, Central District of Illinois"></option>
+                <option value="U.S. District Court, Southern District of Illinois"></option>
+                <option value="U.S. District Court, Northern District of Indiana"></option>
+                <option value="U.S. District Court, Southern District of Indiana"></option>
+                <option value="U.S. District Court, Northern District of Iowa"></option>
+                <option value="U.S. District Court, Southern District of Iowa"></option>
+                <option value="U.S. District Court, District of Kansas"></option>
+                <option value="U.S. District Court, Eastern District of Kentucky"></option>
+                <option value="U.S. District Court, Western District of Kentucky"></option>
+                <option value="U.S. District Court, Eastern District of Louisiana"></option>
+                <option value="U.S. District Court, Middle District of Louisiana"></option>
+                <option value="U.S. District Court, Western District of Louisiana"></option>
+                <option value="U.S. District Court, District of Maine"></option>
+                <option value="U.S. District Court, District of Maryland"></option>
+                <option value="U.S. District Court, District of Massachusetts"></option>
+                <option value="U.S. District Court, Eastern District of Michigan"></option>
+                <option value="U.S. District Court, Western District of Michigan"></option>
+                <option value="U.S. District Court, District of Minnesota"></option>
+                <option value="U.S. District Court, Northern District of Mississippi"></option>
+                <option value="U.S. District Court, Southern District of Mississippi"></option>
+                <option value="U.S. District Court, Eastern District of Missouri"></option>
+                <option value="U.S. District Court, Western District of Missouri"></option>
+                <option value="U.S. District Court, District of Montana"></option>
+                <option value="U.S. District Court, District of Nebraska"></option>
+                <option value="U.S. District Court, District of Nevada"></option>
+                <option value="U.S. District Court, District of New Hampshire"></option>
+                <option value="U.S. District Court, District of New Jersey"></option>
+                <option value="U.S. District Court, District of New Mexico"></option>
+                <option value="U.S. District Court, Northern District of New York"></option>
+                <option value="U.S. District Court, Southern District of New York"></option>
+                <option value="U.S. District Court, Eastern District of New York"></option>
+                <option value="U.S. District Court, Western District of New York"></option>
+                <option value="U.S. District Court, Eastern District of North Carolina"></option>
+                <option value="U.S. District Court, Middle District of North Carolina"></option>
+                <option value="U.S. District Court, Western District of North Carolina"></option>
+                <option value="U.S. District Court, District of North Dakota"></option>
+                <option value="U.S. District Court, District of the Northern Mariana Islands"></option>
+                <option value="U.S. District Court, Northern District of Ohio"></option>
+                <option value="U.S. District Court, Southern District of Ohio"></option>
+                <option value="U.S. District Court, Northern District of Oklahoma"></option>
+                <option value="U.S. District Court, Eastern District of Oklahoma"></option>
+                <option value="U.S. District Court, Western District of Oklahoma"></option>
+                <option value="U.S. District Court, District of Oregon"></option>
+                <option value="U.S. District Court, Eastern District of Pennsylvania"></option>
+                <option value="U.S. District Court, Middle District of Pennsylvania"></option>
+                <option value="U.S. District Court, Western District of Pennsylvania"></option>
+                <option value="U.S. District Court, District of Puerto Rico"></option>
+                <option value="U.S. District Court, District of Rhode Island"></option>
+                <option value="U.S. District Court, District of South Carolina"></option>
+                <option value="U.S. District Court, District of South Dakota"></option>
+                <option value="U.S. District Court, Eastern District of Tennessee"></option>
+                <option value="U.S. District Court, Middle District of Tennessee"></option>
+                <option value="U.S. District Court, Western District of Tennessee"></option>
+                <option value="U.S. District Court, Northern District of Texas"></option>
+                <option value="U.S. District Court, Southern District of Texas"></option>
+                <option value="U.S. District Court, Eastern District of Texas"></option>
+                <option value="U.S. District Court, Western District of Texas"></option>
+                <option value="U.S. District Court, District of Utah"></option>
+                <option value="U.S. District Court, District of Vermont"></option>
+                <option value="U.S. District Court, District of the Virgin Islands"></option>
+                <option value="U.S. District Court, Eastern District of Virginia"></option>
+                <option value="U.S. District Court, Western District of Virginia"></option>
+                <option value="U.S. District Court, Eastern District of Washington"></option>
+                <option value="U.S. District Court, Western District of Washington"></option>
+                <option value="U.S. District Court, Northern District of West Virginia"></option>
+                <option value="U.S. District Court, Southern District of West Virginia"></option>
+                <option value="U.S. District Court, Eastern District of Wisconsin"></option>
+                <option value="U.S. District Court, Western District of Wisconsin"></option>
+                <option value="U.S. District Court, District of Wyoming"></option>
+              </datalist>
+            </div>
+
+            <div class="field">
+              <label for="case-number">Case number <span class="req" data-cond-required>*</span></label>
+              <span class="hint" id="case-number-hint">Format example: 1:24-cv-01234</span>
+              <input type="text" id="case-number" name="case_number" placeholder="1:24-cv-01234" aria-describedby="case-number-hint" data-cond-required />
+            </div>
+
+            <div class="field">
+              <label for="filed-date">Date the lawsuit was filed</label>
+              <span class="hint" id="filed-date-hint">Optional if unknown.</span>
+              <input type="date" id="filed-date" name="filed_date" aria-describedby="filed-date-hint" />
+            </div>
+
+            <div class="field">
+              <label for="served-date">Date you were served with the complaint</label>
+              <span class="hint" id="served-date-hint">Optional if unknown.</span>
+              <input type="date" id="served-date" name="served_date" aria-describedby="served-date-hint" />
+            </div>
+
+            <div class="field">
+              <label for="complaint-file">Upload the complaint or summons</label>
+              <span class="hint" id="complaint-file-hint">Optional. PDF only. Do not upload anything you are not comfortable sharing. See our <a href="privacy.html">Privacy Policy</a>.</span>
+              <input type="file" id="complaint-file" name="complaint_file" accept="application/pdf" aria-describedby="complaint-file-hint" />
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- CLOSING -->
+        <fieldset>
+          <legend>Anything else</legend>
+          <div class="field">
+            <label for="other-info">Is there anything else you'd like us to know?</label>
+            <span class="hint" id="other-info-hint">Optional. Up to 1,000 characters.</span>
+            <textarea id="other-info" name="other_info" maxlength="1000" aria-describedby="other-info-hint other-info-count"></textarea>
+            <span class="char-count" id="other-info-count" aria-live="polite"></span>
+          </div>
+        </fieldset>
+
+        <!-- DISCLAIMER immediately above submit -->
+        <div class="disclaimer" id="disclaimer-above-submit" role="note" aria-label="Important disclaimer">
+          <strong>Important:</strong>
+          The Denaturalization Defense Clearinghouse is not a law firm and is not engaged in the
+          practice of law. The Clearinghouse does not provide legal advice and does not represent
+          you. Submitting this form does not create an attorney-client relationship with the
+          Clearinghouse or with any lawyer. The Clearinghouse will make its best efforts to
+          identify a volunteer lawyer who may be willing to consider representing you on a pro
+          bono basis, but it cannot guarantee that a lawyer will be found or that any lawyer will
+          agree to take your case. If you have an urgent deadline (such as a response date in a
+          court case), you should seek legal help immediately and should not rely solely on this
+          Clearinghouse.
+        </div>
+
+        <fieldset>
+          <legend>Required acknowledgments</legend>
+          <div class="checkbox-group">
+            <div class="checkbox-option">
+              <input type="checkbox" id="ack-disclaimer" name="ack_disclaimer" value="yes" required />
+              <label for="ack-disclaimer">I have read and understand the disclaimer above. <span class="req">*</span></label>
+            </div>
+            <div class="checkbox-option">
+              <input type="checkbox" id="ack-consent" name="ack_consent" value="yes" required />
+              <label for="ack-consent">
+                I consent to be contacted by the Clearinghouse and, if a match is found, to have
+                basic case information (my name, contact information, court, and case number)
+                shared with a prospective volunteer lawyer for conflict-check and intake
+                purposes. <span class="req">*</span>
+              </label>
+            </div>
+          </div>
+        </fieldset>
+
+        <p class="form-note" aria-live="polite">
+          Note: this form is a working draft and is <strong>not yet connected to a secure
+          system</strong>. Please do not rely on it to submit your information until launch. See
+          the <a href="contact.html">Contact</a> page.
+        </p>
+
+        <button type="submit">Submit intake form</button>
+      </form>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <nav aria-label="Footer">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="for-citizens.html">For Citizens</a></li>
+          <li><a href="for-lawyers.html">For Lawyers</a></li>
+          <li><a href="about.html">About &amp; Disclaimer</a></li>
+          <li><a href="privacy.html">Privacy</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+      <p>
+        The Denaturalization Defense Clearinghouse is not a law firm and does not provide legal
+        advice. Submitting a form does not create an attorney-client relationship.
+      </p>
+    </div>
+  </footer>
+
+  <script src="forms.js" defer></script>
+</body>
+</html>

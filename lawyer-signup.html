@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lawyer Sign-Up Form — Denaturalization Defense Clearinghouse</title>
+  <meta name="description" content="Volunteer sign-up form for lawyers willing to represent citizens in civil denaturalization cases pro bono." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container">
+      <p class="site-title">
+        <a href="index.html">
+          <span class="name">Denaturalization Defense Clearinghouse</span>
+          <span class="tagline">Connecting citizens facing denaturalization with volunteer lawyers</span>
+        </a>
+      </p>
+      <nav class="main-nav" aria-label="Primary">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="for-citizens.html">For Citizens</a></li>
+          <li><a href="for-lawyers.html" aria-current="page">For Lawyers</a></li>
+          <li><a href="about.html">About &amp; Disclaimer</a></li>
+          <li><a href="privacy.html">Privacy</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="container">
+      <h1>Lawyer volunteer sign-up</h1>
+      <p class="lead">
+        Thank you for offering to help. Fields marked
+        <span class="req" aria-hidden="true">*</span> (required) must be completed.
+      </p>
+
+      <form action="#" method="post" novalidate data-guard>
+        <fieldset>
+          <legend>Your contact information</legend>
+
+          <div class="field">
+            <label for="name">Full name <span class="req">*</span></label>
+            <input type="text" id="name" name="name" autocomplete="name" required />
+          </div>
+
+          <div class="field">
+            <label for="firm">Firm / organization</label>
+            <span class="hint" id="firm-hint">Optional.</span>
+            <input type="text" id="firm" name="firm" autocomplete="organization" aria-describedby="firm-hint" />
+          </div>
+
+          <div class="field">
+            <label for="email">Email address <span class="req">*</span></label>
+            <input type="email" id="email" name="email" autocomplete="email" required />
+          </div>
+
+          <div class="field">
+            <label for="phone">Telephone number <span class="req">*</span></label>
+            <input type="tel" id="phone" name="phone" autocomplete="tel" required />
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Admission and practice</legend>
+
+          <div class="field">
+            <label for="bar">Jurisdiction(s) admitted to practice / bar number(s) <span class="req">*</span></label>
+            <span class="hint" id="bar-hint">List the state(s) or other jurisdictions where you are admitted, with bar numbers.</span>
+            <textarea id="bar" name="bar_admissions" required aria-describedby="bar-hint"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="districts">Federal district court(s) in which you are admitted or willing to appear <span class="req">*</span></label>
+            <span class="hint" id="districts-hint">You may list multiple districts, or describe your willingness to seek admission pro hac vice.</span>
+            <textarea id="districts" name="federal_districts" required aria-describedby="districts-hint"></textarea>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Experience</legend>
+          <div class="field">
+            <span class="label" id="experience-label" style="font-weight:600;display:block;margin-bottom:0.3rem;">Experience level <span class="req">*</span></span>
+            <div class="radio-group" role="radiogroup" aria-labelledby="experience-label">
+              <div class="radio-option">
+                <input type="radio" id="exp-denat" name="experience" value="denaturalization" required />
+                <label for="exp-denat">I have prior experience defending civil denaturalization cases.</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="exp-federal" name="experience" value="federal-litigation" />
+                <label for="exp-federal">I have general federal civil litigation experience but no denaturalization experience.</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="exp-limited" name="experience" value="limited" />
+                <label for="exp-limited">I have limited litigation experience and am interested primarily in training / co-counsel roles.</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="conditional" data-show-when="experience:denaturalization" hidden>
+            <div class="field">
+              <label for="denat-desc">Brief description of relevant denaturalization matters</label>
+              <span class="hint" id="denat-desc-hint">Optional.</span>
+              <textarea id="denat-desc" name="denaturalization_description" maxlength="1500" aria-describedby="denat-desc-hint denat-desc-count"></textarea>
+              <span class="char-count" id="denat-desc-count" aria-live="polite"></span>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="checkbox-option">
+              <input type="checkbox" id="training" name="willing_training" value="yes" />
+              <label for="training">I am willing to receive training.</label>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Capacity and preferences</legend>
+
+          <div class="field">
+            <label for="capacity">Number of pro bono matters you are willing to take on <span class="req">*</span></label>
+            <select id="capacity" name="capacity" required>
+              <option value="">Select one…</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3+">3 or more</option>
+              <option value="depends">Depends on the case</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="venue-limits">Geographic / venue limitations, if any</label>
+            <span class="hint" id="venue-limits-hint">Optional.</span>
+            <textarea id="venue-limits" name="venue_limitations" aria-describedby="venue-limits-hint"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="languages">Language capabilities</label>
+            <span class="hint" id="languages-hint">Optional. Languages other than English in which you can communicate with clients.</span>
+            <input type="text" id="languages" name="languages" aria-describedby="languages-hint" />
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Required acknowledgment</legend>
+          <div class="checkbox-option">
+            <input type="checkbox" id="ack" name="ack" value="yes" required />
+            <label for="ack">
+              I acknowledge that volunteering does not create any obligation on the Clearinghouse
+              to refer a case to me, and that any representation I undertake would be governed by a
+              direct engagement agreement between me and the citizen. <span class="req">*</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <p class="form-note" aria-live="polite">
+          Note: this form is a working draft and is <strong>not yet connected to a secure
+          system</strong>. Please use the <a href="contact.html">Contact</a> page to reach us in
+          the meantime.
+        </p>
+
+        <button type="submit">Submit volunteer sign-up</button>
+      </form>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <nav aria-label="Footer">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="for-citizens.html">For Citizens</a></li>
+          <li><a href="for-lawyers.html">For Lawyers</a></li>
+          <li><a href="about.html">About &amp; Disclaimer</a></li>
+          <li><a href="privacy.html">Privacy</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+      <p>
+        The Denaturalization Defense Clearinghouse is not a law firm and does not provide legal
+        advice. Submitting a form does not create an attorney-client relationship.
+      </p>
+    </div>
+  </footer>
+
+  <script src="forms.js" defer></script>
+</body>
+</html>

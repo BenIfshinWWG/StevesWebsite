@@ -1,0 +1,12 @@
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# Dependency / build output (none yet, but reserved)
+node_modules/
+dist/
+.env
+.env.*

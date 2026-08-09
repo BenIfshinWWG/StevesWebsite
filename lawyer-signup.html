@@ -40,7 +40,12 @@
         <span class="req" aria-hidden="true">*</span> (required) must be completed.
       </p>
 
-      <form action="#" method="post" novalidate data-guard>
+      <form action="#" method="post" novalidate data-guard data-form-type="lawyer" data-success="lawyer-confirmation.html">
+        <input type="hidden" name="form_type" value="lawyer" />
+        <div class="hp-field" aria-hidden="true">
+          <label for="company">Company (leave blank)</label>
+          <input type="text" id="company" name="company" tabindex="-1" autocomplete="off" />
+        </div>
         <fieldset>
           <legend>Your contact information</legend>
 
@@ -158,10 +163,10 @@
           </div>
         </fieldset>
 
+        <div class="turnstile-slot"></div>
+
         <p class="form-note" aria-live="polite">
-          Note: this form is a working draft and is <strong>not yet connected to a secure
-          system</strong>. Please use the <a href="contact.html">Contact</a> page to reach us in
-          the meantime.
+          Your information is submitted over a secure, encrypted connection.
         </p>
 
         <button type="submit">Submit volunteer sign-up</button>
@@ -188,6 +193,7 @@
     </div>
   </footer>
 
+  <script src="config.js"></script>
   <script src="forms.js" defer></script>
 </body>
 </html>

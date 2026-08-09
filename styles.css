@@ -337,6 +337,17 @@ textarea:focus-visible {
   .cta-early .button { margin-left: 0; width: 100%; text-align: center; }
 }
 
+/* ---- Anti-bot honeypot (hidden from humans, off-screen not display:none so
+       bots that skip hidden fields still see it) ---- */
+.hp-field {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.turnstile-slot { margin: 1.25rem 0; }
+
 /* ---- Utility ---- */
 .visually-hidden {
   position: absolute;

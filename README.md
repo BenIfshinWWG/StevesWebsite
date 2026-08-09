@@ -42,34 +42,28 @@ python3 -m http.server 8000   # then visit http://localhost:8000
   the submit button), and About pages.
 - Both forms with full field sets, semantic labels, and conditional fields:
   - Citizen intake shows threat-specific or lawsuit-specific fields based on case status; the
-    lawsuit branch includes a searchable list of all 94 federal judicial districts and a
-    PDF-only upload control.
+    lawsuit branch includes a searchable list of all 94 federal judicial districts.
   - Lawyer sign-up shows a description field when prior denaturalization experience is selected.
 - Client-side niceties: live character counters, conditional `required` handling, keyboard
   focus styles, skip link, dark-mode support.
 - Accessibility: semantic HTML, associated labels, `aria-*` on grouped controls, high contrast.
 
-## Backend & security — NOT YET DONE (required before launch)
+## Backend
 
-The forms are intentionally **not connected to any submission backend.** Submitting currently
-shows a notice and does nothing. This is deliberate: the intake form collects sensitive personal
-and litigation data (immigration/citizenship status, active federal case numbers, uploaded court
-documents), and Section 6 of the requirements calls for real safeguards that must be built and
-reviewed, not stubbed. Before this site collects real data it needs:
+The forms submit to a **Supabase Edge Function** (`supabase/functions/submit`) that verifies a
+Cloudflare Turnstile token, writes to Postgres (`supabase/migrations/0001_init.sql`, RLS locked
+down), emails Steve a low-detail alert, and emails the submitter a confirmation. See
+**[SETUP.md](SETUP.md)** for the full wiring steps.
 
-- [ ] A secure submission endpoint over HTTPS/TLS.
-- [ ] Encrypted-at-rest, access-controlled storage (a real database, **not** plain email).
-- [ ] Need-to-know access limits for Clearinghouse staff/volunteers.
-- [ ] PDF-only upload enforcement **server-side** + malware scanning + access-controlled storage.
-- [ ] Spam/bot protection (accessible CAPTCHA or equivalent) on both forms.
-- [ ] Automated confirmation emails restating the disclaimer, and wiring the confirmation pages.
-- [ ] Legal review of the Privacy Policy and the retention/deletion process.
-- [ ] Fill in the placeholders marked `[Placeholder ...]` in `about.html`, `contact.html`,
-      and `privacy.html` (organization info, contact emails, retention periods).
+Until the two public values in [`config.js`](config.js) are filled in, the forms stay **inert**
+(they show a "not connected" notice and send nothing), so the public preview never collects data.
 
-Deciding *how* to host and process submissions (e.g., a serverless form handler + managed
-database + object storage + email provider, all with encryption and access control) is the next
-step and should be chosen with the Clearinghouse's security/legal review in mind.
+**Deferred / outstanding:**
+
+- [ ] PDF/document upload + malware scanning (deferred for v1 — case number collected instead).
+- [ ] Verified Resend sending domain (needed to email confirmations to citizens).
+- [ ] Legal review of the Privacy Policy, disclaimers, and the retention/deletion process.
+- [ ] Fill in remaining `[Placeholder ...]` contact/org details in `about.html`, `contact.html`.
 
 ## Notes
 

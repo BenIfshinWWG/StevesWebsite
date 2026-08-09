@@ -71,9 +71,10 @@ create table if not exists public.lawyer_signups (
   bar_admissions              text not null,
   federal_districts           text not null,
   experience                  text not null
-                                check (experience in ('denaturalization','federal-litigation','limited')),
+                                check (experience in ('experienced','trained','assist')),
   denaturalization_description text,
   willing_training            boolean not null default false,
+  malpractice_insurance       text check (malpractice_insurance in ('yes','no')),
   capacity                    text check (capacity in ('1','2','3+','depends')),
   venue_limitations           text,
   languages                   text,

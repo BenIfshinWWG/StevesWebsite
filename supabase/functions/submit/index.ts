@@ -1,3 +1,9 @@
+// @ts-nocheck — This runs on Deno (Supabase Edge Functions), not Node. The
+// `Deno` global and remote `https://esm.sh/...` import resolve at deploy time
+// in the Deno runtime; the repo's Node/TypeScript checker doesn't know about
+// them, so its errors here are false positives. Deployment is unaffected.
+/// <reference lib="deno.ns" />
+
 // Denaturalization Defense Clearinghouse — form submission Edge Function
 //
 // Receives POSTs from the citizen intake and lawyer sign-up forms, verifies the
@@ -51,8 +57,8 @@ const CITIZEN_FIELDS = [
 
 const LAWYER_FIELDS = [
   "name", "firm", "email", "phone", "bar_admissions", "federal_districts",
-  "experience", "denaturalization_description", "capacity",
-  "venue_limitations", "languages",
+  "experience", "denaturalization_description", "malpractice_insurance",
+  "capacity", "venue_limitations", "languages",
 ] as const;
 
 async function verifyTurnstile(token: string, ip: string | null): Promise<boolean> {

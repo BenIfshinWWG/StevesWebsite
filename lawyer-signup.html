@@ -24,6 +24,7 @@
           <li><a href="index.html">Home</a></li>
           <li><a href="for-citizens.html">For Citizens</a></li>
           <li><a href="for-lawyers.html" aria-current="page">For Lawyers</a></li>
+          <li><a href="resources.html">Resources</a></li>
           <li><a href="about.html">About &amp; Disclaimer</a></li>
           <li><a href="privacy.html">Privacy</a></li>
           <li><a href="contact.html">Contact</a></li>
@@ -93,21 +94,21 @@
             <span class="label" id="experience-label" style="font-weight:600;display:block;margin-bottom:0.3rem;">Experience level <span class="req">*</span></span>
             <div class="radio-group" role="radiogroup" aria-labelledby="experience-label">
               <div class="radio-option">
-                <input type="radio" id="exp-denat" name="experience" value="denaturalization" required />
-                <label for="exp-denat">I have prior experience defending civil denaturalization cases.</label>
+                <input type="radio" id="exp-experienced" name="experience" value="experienced" required />
+                <label for="exp-experienced">Experienced counsel: I have defended civil denaturalization cases.</label>
               </div>
               <div class="radio-option">
-                <input type="radio" id="exp-federal" name="experience" value="federal-litigation" />
-                <label for="exp-federal">I have general federal civil litigation experience but no denaturalization experience.</label>
+                <input type="radio" id="exp-trained" name="experience" value="trained" />
+                <label for="exp-trained">Trained or willing to be trained: I have substantial federal litigation experience and have attended, or am willing to attend, a denaturalization defense training.</label>
               </div>
               <div class="radio-option">
-                <input type="radio" id="exp-limited" name="experience" value="limited" />
-                <label for="exp-limited">I have limited litigation experience and am interested primarily in training / co-counsel roles.</label>
+                <input type="radio" id="exp-assist" name="experience" value="assist" />
+                <label for="exp-assist">Willing to assist: I do not have denaturalization defense or substantial federal civil litigation experience, but want to assist experienced or trained lawyers.</label>
               </div>
             </div>
           </div>
 
-          <div class="conditional" data-show-when="experience:denaturalization" hidden>
+          <div class="conditional" data-show-when="experience:experienced" hidden>
             <div class="field">
               <label for="denat-desc">Brief description of relevant denaturalization matters</label>
               <span class="hint" id="denat-desc-hint">Optional.</span>
@@ -120,6 +121,23 @@
             <div class="checkbox-option">
               <input type="checkbox" id="training" name="willing_training" value="yes" />
               <label for="training">I am willing to receive training.</label>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Professional liability insurance</legend>
+          <div class="field">
+            <span class="label" id="malpractice-label" style="font-weight:600;display:block;margin-bottom:0.3rem;">Do you carry legal malpractice (professional liability) insurance coverage? <span class="req">*</span></span>
+            <div class="radio-group" role="radiogroup" aria-labelledby="malpractice-label">
+              <div class="radio-option">
+                <input type="radio" id="mal-yes" name="malpractice_insurance" value="yes" required />
+                <label for="mal-yes">Yes, I carry legal malpractice insurance coverage.</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="mal-no" name="malpractice_insurance" value="no" />
+                <label for="mal-no">No, I do not currently carry legal malpractice insurance coverage.</label>
+              </div>
             </div>
           </div>
         </fieldset>
@@ -181,6 +199,7 @@
           <li><a href="index.html">Home</a></li>
           <li><a href="for-citizens.html">For Citizens</a></li>
           <li><a href="for-lawyers.html">For Lawyers</a></li>
+          <li><a href="resources.html">Resources</a></li>
           <li><a href="about.html">About &amp; Disclaimer</a></li>
           <li><a href="privacy.html">Privacy</a></li>
           <li><a href="contact.html">Contact</a></li>

@@ -213,6 +213,20 @@ a:hover { color: var(--brand-hover); }
 .cta-early p { margin: 0; font-size: 1rem; color: var(--text); }
 .cta-early .button { margin-left: auto; }
 
+/* ---- Callout (informational note, lighter than the legal disclaimer) ---- */
+.callout {
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--brand);
+  background: color-mix(in srgb, var(--brand) 5%, var(--card));
+  padding: 0.9rem 1.15rem;
+  margin: 1.5rem 0;
+  border-radius: 8px;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+.callout p { margin: 0; }
+
 /* ---- Disclaimer box ---- */
 .disclaimer {
   border: 1px solid var(--warn-border);

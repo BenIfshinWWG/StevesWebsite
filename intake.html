@@ -71,7 +71,7 @@
 
           <div class="field">
             <label for="fullname">Full legal name <span class="req">*</span></label>
-            <input type="text" id="fullname" name="fullname" autocomplete="name" required />
+            <input type="text" id="fullname" name="full_name" autocomplete="name" required />
           </div>
 
           <div class="field">
@@ -92,7 +92,7 @@
           <div class="field">
             <label for="language">Preferred language for communication</label>
             <span class="hint" id="language-hint">Optional. Tell us if you would prefer to communicate in a language other than English.</span>
-            <input type="text" id="language" name="language" aria-describedby="language-hint" />
+            <input type="text" id="language" name="preferred_language" aria-describedby="language-hint" />
           </div>
 
           <div class="field">
@@ -286,6 +286,31 @@
               <label for="served-date">Date you were served with the complaint</label>
               <span class="hint" id="served-date-hint">Optional if unknown.</span>
               <input type="date" id="served-date" name="served_date" aria-describedby="served-date-hint" />
+            </div>
+          </div>
+
+          <!-- REPRESENTATION -->
+          <div class="field">
+            <span class="label" id="represented-label" style="font-weight:600;display:block;margin-bottom:0.3rem;">Are you already represented by a lawyer in this matter? <span class="req">*</span></span>
+            <div class="radio-group" role="radiogroup" aria-labelledby="represented-label">
+              <div class="radio-option">
+                <input type="radio" id="rep-yes" name="represented" value="yes" required />
+                <label for="rep-yes">Yes</label>
+              </div>
+              <div class="radio-option">
+                <input type="radio" id="rep-no" name="represented" value="no" />
+                <label for="rep-no">No</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- CONDITIONAL: already represented -->
+          <div class="conditional" data-show-when="represented:yes" hidden>
+            <div class="field">
+              <label for="represented-reason">Why are you seeking a lawyer through the Clearinghouse? <span class="req" data-cond-required>*</span></label>
+              <span class="hint" id="represented-reason-hint">For example, your current lawyer cannot continue, you can no longer afford the fees, or you want a lawyer with denaturalization experience. Up to 1,000 characters.</span>
+              <textarea id="represented-reason" name="represented_reason" maxlength="1000" aria-describedby="represented-reason-hint represented-reason-count" data-cond-required></textarea>
+              <span class="char-count" id="represented-reason-count" aria-live="polite"></span>
             </div>
           </div>
         </fieldset>

@@ -7,6 +7,9 @@ denaturalization with volunteer lawyers willing to consider representing them pr
 **The Clearinghouse is not a law firm and does not provide legal advice.** This repository is the
 website only.
 
+Public address: **https://denatzprobono.com** (GitHub Pages + the [`CNAME`](CNAME) file; DNS is
+managed at Squarespace — see [SETUP.md](SETUP.md) step 0).
+
 ## Stack
 
 Plain static HTML + CSS, with a small progressive-enhancement JavaScript file. No frameworks, no
@@ -28,6 +31,7 @@ python3 -m http.server 8000   # then visit http://localhost:8000
 | `for-lawyers.html` | For Lawyers / Volunteer |
 | `lawyer-signup.html` | Lawyer Sign-Up Form |
 | `lawyer-confirmation.html` | Post-submission confirmation (lawyer) |
+| `resources.html` | Resources for lawyers |
 | `about.html` | About & Disclaimer |
 | `contact.html` | Contact |
 | `privacy.html` | Privacy Policy |
@@ -60,6 +64,10 @@ Until the two public values in [`config.js`](config.js) are filled in, the forms
 
 **Deferred / outstanding:**
 
+- [ ] Point Squarespace DNS at GitHub Pages and enable HTTPS (SETUP.md step 0).
+- [ ] Create the Supabase project, deploy the function, fill in `config.js` (SETUP.md steps 1–5).
+- [ ] Open the site to search engines once the forms are tested (SETUP.md step 7).
+- [ ] `denatzprobono.org` → forward to `denatzprobono.com` at Squarespace.
 - [ ] PDF/document upload + malware scanning (deferred for v1 — case number collected instead).
 - [ ] Verified Resend sending domain (needed to email confirmations to citizens).
 - [ ] Legal review of the Privacy Policy, disclaimers, and the retention/deletion process.

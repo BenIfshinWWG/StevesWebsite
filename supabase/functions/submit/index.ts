@@ -18,11 +18,25 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const ALLOWED_ORIGIN = Deno.env.get("ALLOWED_ORIGIN") ?? "*";
+// ALLOWED_ORIGIN is a comma-separated allowlist, so the apex domain, the www
+// host, and the .org redirect domain can all be permitted at once, e.g.
+//   "https://denatzprobono.com,https://www.denatzprobono.com"
+// Unset means "*" (any origin) — fine before launch, but set it in production.
+const ALLOWED_ORIGINS = (Deno.env.get("ALLOWED_ORIGIN") ?? "*")
+  .split(",").map((o) => o.trim()).filter(Boolean);
 
-function cors(headers: HeadersInit = {}): HeadersInit {
+// Echo back the caller's own origin when it is on the allowlist; browsers
+// reject a comma-joined list in Access-Control-Allow-Origin.
+function allowOrigin(req: Request): string {
+  if (ALLOWED_ORIGINS.includes("*")) return "*";
+  const origin = req.headers.get("origin");
+  if (origin && ALLOWED_ORIGINS.includes(origin)) return origin;
+  return ALLOWED_ORIGINS[0];
+}
+
+function cors(req: Request, headers: HeadersInit = {}): HeadersInit {
   return {
-    "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
+    "Access-Control-Allow-Origin": allowOrigin(req),
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "content-type",
     "Vary": "Origin",
@@ -30,10 +44,10 @@ function cors(headers: HeadersInit = {}): HeadersInit {
   };
 }
 
-function json(status: number, body: unknown): Response {
+function json(req: Request, status: number, body: unknown): Response {
   return new Response(JSON.stringify(body), {
     status,
-    headers: cors({ "content-type": "application/json" }),
+    headers: cors(req, { "content-type": "application/json" }),
   });
 }
 
@@ -52,7 +66,8 @@ const CITIZEN_FIELDS = [
   "full_name", "email", "phone", "location", "preferred_language",
   "contact_method", "case_status", "threat_date", "threat_how",
   "threat_how_other", "threat_desc", "district", "case_number",
-  "filed_date", "served_date", "other_info",
+  "filed_date", "served_date", "represented", "represented_reason",
+  "other_info",
 ] as const;
 
 const LAWYER_FIELDS = [
@@ -98,25 +113,25 @@ const DISCLAIMER =
   "solely on this Clearinghouse.";
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors() });
-  if (req.method !== "POST") return json(405, { error: "Method not allowed" });
+  if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: cors(req) });
+  if (req.method !== "POST") return json(req, 405, { error: "Method not allowed" });
 
   let payload: Record<string, unknown>;
   try {
     payload = await req.json();
   } catch {
-    return json(400, { error: "Invalid JSON" });
+    return json(req, 400, { error: "Invalid JSON" });
   }
 
   // Honeypot: real users never fill this hidden field.
-  if (clean(payload["company"])) return json(200, { ok: true }); // silently accept + drop
+  if (clean(payload["company"])) return json(req, 200, { ok: true }); // silently accept + drop
 
   const ip = req.headers.get("cf-connecting-ip") ??
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? null;
 
   const token = clean(payload["cf-turnstile-response"]) ?? "";
   if (!token || !(await verifyTurnstile(token, ip))) {
-    return json(400, { error: "Verification failed. Please complete the challenge and try again." });
+    return json(req, 400, { error: "Verification failed. Please complete the challenge and try again." });
   }
 
   const formType = clean(payload["form_type"]);
@@ -136,11 +151,11 @@ Deno.serve(async (req) => {
 
     if (!row["full_name"] || !row["email"] || !row["phone"] || !row["location"] ||
         !row["case_status"] || !row["ack_disclaimer"] || !row["ack_consent"]) {
-      return json(400, { error: "Missing required fields." });
+      return json(req, 400, { error: "Missing required fields." });
     }
 
     const { error } = await supabase.from("citizen_intakes").insert(row);
-    if (error) return json(500, { error: "Could not save your submission. Please try again." });
+    if (error) return json(req, 500, { error: "Could not save your submission. Please try again." });
 
     if (staffEmail) {
       await sendEmail(
@@ -161,7 +176,7 @@ Deno.serve(async (req) => {
       "solely on this Clearinghouse.\n\n" + DISCLAIMER,
     );
 
-    return json(200, { ok: true });
+    return json(req, 200, { ok: true });
   }
 
   if (formType === "lawyer") {
@@ -172,11 +187,11 @@ Deno.serve(async (req) => {
 
     if (!row["name"] || !row["email"] || !row["phone"] || !row["bar_admissions"] ||
         !row["federal_districts"] || !row["experience"] || !row["ack"]) {
-      return json(400, { error: "Missing required fields." });
+      return json(req, 400, { error: "Missing required fields." });
     }
 
     const { error } = await supabase.from("lawyer_signups").insert(row);
-    if (error) return json(500, { error: "Could not save your submission. Please try again." });
+    if (error) return json(req, 500, { error: "Could not save your submission. Please try again." });
 
     if (staffEmail) {
       await sendEmail(
@@ -193,8 +208,8 @@ Deno.serve(async (req) => {
       "Signing up does not obligate the Clearinghouse to refer any case to you.",
     );
 
-    return json(200, { ok: true });
+    return json(req, 200, { ok: true });
   }
 
-  return json(400, { error: "Unknown form type." });
+  return json(req, 400, { error: "Unknown form type." });
 });

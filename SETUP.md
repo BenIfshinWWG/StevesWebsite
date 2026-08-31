@@ -11,16 +11,49 @@ Until you finish this and fill in `config.js`, the live forms stay **inert**
 You'll create three free accounts, run a few commands, then paste two public
 values into `config.js`. Estimated time: about 30 minutes.
 
+The site's public address is **`https://denatzprobono.com`** (see step 0).
+
 ---
+
+## 0. Domain (denatzprobono.com, registered at Squarespace)
+
+The repo already contains a [`CNAME`](CNAME) file with `denatzprobono.com`, which
+tells GitHub Pages to serve the site at that domain. Two things still have to be
+done by hand — once each:
+
+**a. Point the DNS at GitHub.** In the Squarespace **Domains** dashboard, open
+`denatzprobono.com` → **DNS Settings** and set:
+
+| Type | Host | Value |
+|---|---|---|
+| A | `@` | `185.199.108.153` |
+| A | `@` | `185.199.109.153` |
+| A | `@` | `185.199.110.153` |
+| A | `@` | `185.199.111.153` |
+| CNAME | `www` | `benifshinwwg.github.io` |
+
+Remove any Squarespace parking/forwarding records for `@` and `www` that
+conflict. DNS changes can take anywhere from a few minutes to a few hours.
+
+**b. Confirm it in GitHub.** In the repo → **Settings → Pages**, the custom
+domain should read `denatzprobono.com` (the `CNAME` file sets this on push).
+Once DNS resolves, tick **Enforce HTTPS**. GitHub issues the certificate
+automatically; it can take up to an hour after DNS propagates.
+
+**The `.org` redirect** can wait. When you want it, point `denatzprobono.org` at
+Squarespace's domain forwarding to `https://denatzprobono.com` — do *not* add it
+as a second GitHub Pages domain (Pages supports only one). Nothing in this repo
+needs to change for that.
 
 ## 1. Supabase (database + storage)
 
 1. Sign up at <https://supabase.com> and create a new **project**. Pick a strong
    database password and save it. Note your **Project Ref** (the string in your
    project URL, `https://app.supabase.com/project/<PROJECT_REF>`).
-2. Create the tables: open the project's **SQL Editor**, paste the entire
-   contents of [`supabase/migrations/0001_init.sql`](supabase/migrations/0001_init.sql),
-   and run it. (Or use the CLI in step 4.)
+2. Create the tables: open the project's **SQL Editor** and run the migrations in
+   order — first [`supabase/migrations/0001_init.sql`](supabase/migrations/0001_init.sql),
+   then [`supabase/migrations/0002_citizen_representation.sql`](supabase/migrations/0002_citizen_representation.sql).
+   Paste the entire contents of each and run. (Or use the CLI in step 4.)
 3. Find your keys under **Project Settings → API**:
    - **Project URL** (e.g. `https://<PROJECT_REF>.supabase.co`)
    - **service_role key** (secret — used only by the Edge Function, never in the site)
@@ -28,7 +61,8 @@ values into `config.js`. Estimated time: about 30 minutes.
 ## 2. Cloudflare Turnstile (bot protection)
 
 1. In the Cloudflare dashboard, go to **Turnstile** and **Add a widget**.
-2. Add your site domain: `benifshinwwg.github.io` (and `localhost` for testing).
+2. Add your site domains: `denatzprobono.com` and `www.denatzprobono.com` (and
+   `localhost` for testing).
 3. Copy the two keys it gives you:
    - **Site key** (public — goes in `config.js`)
    - **Secret key** (secret — goes in the Edge Function)
@@ -37,10 +71,12 @@ values into `config.js`. Estimated time: about 30 minutes.
 
 1. Sign up at <https://resend.com> and create an **API key** (secret).
 2. **Sender address (`FROM_EMAIL`)**: to email *citizens* from your own domain,
-   you must **verify a domain** in Resend and use an address at that domain
-   (e.g. `no-reply@yourdomain.org`). Without a verified domain, Resend only lets
-   you send test emails to your own address. The alert email to Steve works
-   either way. Email is best-effort: if it fails, the submission is still saved.
+   you must **verify `denatzprobono.com`** in Resend (it gives you DKIM/SPF
+   records to add in Squarespace DNS alongside the records from step 0) and send
+   from an address at that domain, e.g. `no-reply@denatzprobono.com`. Without a
+   verified domain, Resend only lets you send test emails to your own address.
+   The alert email to Steve works either way. Email is best-effort: if it fails,
+   the submission is still saved.
 
 ---
 
@@ -53,16 +89,18 @@ From the project root, using the Supabase CLI via `npx` (no install needed):
 npx supabase login
 npx supabase link --project-ref YOUR_PROJECT_REF
 
-# (Optional) push the database migration instead of pasting SQL in step 1.2
+# (Optional) push the database migrations instead of pasting SQL in step 1.2
 npx supabase db push
 
-# Set the function's secrets (server-side only — never committed)
+# Set the function's secrets (server-side only — never committed).
+# ALLOWED_ORIGIN is a comma-separated allowlist — include both hosts the site
+# answers on, with no trailing slashes.
 npx supabase secrets set \
   TURNSTILE_SECRET="your_turnstile_secret_key" \
   RESEND_API_KEY="your_resend_api_key" \
   STAFF_EMAIL="steve@example.org" \
-  FROM_EMAIL="no-reply@yourdomain.org" \
-  ALLOWED_ORIGIN="https://benifshinwwg.github.io"
+  FROM_EMAIL="no-reply@denatzprobono.com" \
+  ALLOWED_ORIGIN="https://denatzprobono.com,https://www.denatzprobono.com"
 
 # Deploy. --no-verify-jwt makes it a public endpoint (the forms are anonymous;
 # they're protected by Turnstile + server-side validation, not a login token).
@@ -100,6 +138,21 @@ GitHub Pages redeploys in a minute or two and the forms go live.
 2. Confirm the row appears in Supabase (**Table Editor → citizen_intakes**).
 3. Confirm Steve got the alert email and the test address got the confirmation.
 4. Repeat for the lawyer sign-up form.
+
+## 7. Open the site to search engines
+
+The site is deliberately hidden from search engines while it's a draft:
+[`robots.txt`](robots.txt) disallows everything and every page carries a
+`<meta name="robots" content="noindex, nofollow">` tag. **Do this only once the
+forms are tested and working**, since indexing a site whose forms silently fail
+is worse than not being found at all. To open it up, replace `robots.txt` with
+
+```
+User-agent: *
+Allow: /
+```
+
+and delete the `noindex` meta tag from all eleven `.html` files.
 
 ---
 

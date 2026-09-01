@@ -115,14 +115,25 @@ Your function URL will be:
 
 ## 5. Turn the forms on
 
-Edit [`config.js`](config.js) and fill in the two **public** values:
+**Do this last.** Filling these in is the switch that takes the forms from
+inert to live ([`forms.js`](forms.js)), so the Edge Function must already be
+deployed with its secrets set — otherwise visitors get forms that render and
+then fail on submit, which is worse than the honest "not connected" notice.
+
+This project's two public values are already known. Paste them into
+[`config.js`](config.js) verbatim:
 
 ```js
 window.CLEARINGHOUSE_CONFIG = {
-  functionUrl: "https://YOUR_PROJECT_REF.supabase.co/functions/v1/submit",
-  turnstileSiteKey: "your_turnstile_SITE_key",
+  functionUrl: "https://retewbijfzkwpistzkpl.supabase.co/functions/v1/submit",
+  turnstileSiteKey: "0x4AAAAAAEjQAK379tHdny5T",
 };
 ```
+
+Both are safe in a public repo: the function URL is a public endpoint guarded by
+Turnstile plus server-side validation, and the Turnstile *site* key is designed
+to be embedded in HTML. The Turnstile **secret** key never appears here — it
+lives only in the Edge Function's secrets.
 
 Then commit and push:
 

@@ -155,7 +155,15 @@ Deno.serve(async (req) => {
     }
 
     const { error } = await supabase.from("citizen_intakes").insert(row);
-    if (error) return json(req, 500, { error: "Could not save your submission. Please try again." });
+    if (error) {
+      // Log the real cause for debugging; the submitter gets a generic message.
+      // Never log `row` itself — it holds the person's case details.
+      console.error("citizen_intakes insert failed", {
+        code: error.code, message: error.message,
+        details: error.details, hint: error.hint,
+      });
+      return json(req, 500, { error: "Could not save your submission. Please try again." });
+    }
 
     if (staffEmail) {
       await sendEmail(
@@ -191,7 +199,13 @@ Deno.serve(async (req) => {
     }
 
     const { error } = await supabase.from("lawyer_signups").insert(row);
-    if (error) return json(req, 500, { error: "Could not save your submission. Please try again." });
+    if (error) {
+      console.error("lawyer_signups insert failed", {
+        code: error.code, message: error.message,
+        details: error.details, hint: error.hint,
+      });
+      return json(req, 500, { error: "Could not save your submission. Please try again." });
+    }
 
     if (staffEmail) {
       await sendEmail(

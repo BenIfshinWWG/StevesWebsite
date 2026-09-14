@@ -93,11 +93,62 @@ async function sendEmail(to: string, subject: string, text: string): Promise<voi
   const key = Deno.env.get("RESEND_API_KEY");
   const from = Deno.env.get("FROM_EMAIL");
   if (!key || !from) return; // email is best-effort; never block a submission
+  // `to` may be a comma-separated list, so STAFF_EMAIL can notify several
+  // people (e.g. a shared mailbox plus an individual) without a code change.
+  const recipients = to.split(",").map((a) => a.trim()).filter(Boolean);
+  if (!recipients.length) return;
   await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { "content-type": "application/json", authorization: `Bearer ${key}` },
-    body: JSON.stringify({ from, to, subject, text }),
+    body: JSON.stringify({ from, to: recipients, subject, text }),
   }).catch(() => {});
+}
+
+// Human-readable labels for the staff notification emails. Order here is the
+// order they appear in the email, which is roughly the order of the form.
+const CITIZEN_LABELS: Array<[string, string]> = [
+  ["full_name", "Name"],
+  ["email", "Email"],
+  ["phone", "Phone"],
+  ["location", "City and state"],
+  ["preferred_language", "Preferred language"],
+  ["contact_method", "Preferred contact method"],
+  ["case_status", "Case status"],
+  ["threat_date", "Date of threat"],
+  ["threat_how", "How the threat was received"],
+  ["threat_how_other", "How the threat was received (other)"],
+  ["threat_desc", "Description of the threat"],
+  ["district", "Federal district"],
+  ["case_number", "Case number"],
+  ["filed_date", "Date filed"],
+  ["served_date", "Date served"],
+  ["represented", "Already represented by a lawyer"],
+  ["represented_reason", "Why they are seeking a lawyer anyway"],
+  ["other_info", "Anything else"],
+];
+
+const LAWYER_LABELS: Array<[string, string]> = [
+  ["name", "Name"],
+  ["firm", "Firm / organization"],
+  ["email", "Email"],
+  ["phone", "Phone"],
+  ["bar_admissions", "Bar admissions"],
+  ["federal_districts", "Federal districts"],
+  ["experience", "Experience track"],
+  ["denaturalization_description", "Denaturalization experience"],
+  ["malpractice_insurance", "Malpractice insurance"],
+  ["capacity", "Capacity"],
+  ["venue_limitations", "Venue limitations"],
+  ["languages", "Languages"],
+];
+
+// Render "Label: value" lines, skipping anything the submitter left blank so
+// the email stays short and scannable rather than a wall of empty fields.
+function summarize(row: Record<string, unknown>, labels: Array<[string, string]>): string {
+  return labels
+    .filter(([field]) => row[field] !== null && row[field] !== undefined && row[field] !== "")
+    .map(([field, label]) => `${label}: ${row[field]}`)
+    .join("\n");
 }
 
 const DISCLAIMER =
@@ -166,12 +217,23 @@ Deno.serve(async (req) => {
     }
 
     if (staffEmail) {
+      const urgent = row["case_status"] === "sued";
       await sendEmail(
         staffEmail,
-        "New citizen intake received",
-        "A new citizen intake was submitted to the Clearinghouse. " +
-        "Log in to the Supabase dashboard to review the details. " +
-        "(No case details are included in this email for privacy.)",
+        urgent
+          ? "New citizen intake — LAWSUIT FILED (time-sensitive)"
+          : "New citizen intake — threat of denaturalization",
+        "A new citizen intake was submitted to the Clearinghouse.\n\n" +
+        summarize(row, CITIZEN_LABELS) +
+        (urgent
+          ? "\n\nThis person reports that a denaturalization case has already been " +
+            "filed against them, which means there is likely a court deadline. " +
+            "Treat this as time-sensitive."
+          : "") +
+        "\n\nThis email contains the full submission so it can be acted on " +
+        "without logging in. It is confidential: it concerns a specific person's " +
+        "citizenship case. Do not forward it outside the Clearinghouse. The " +
+        "authoritative record is in the Clearinghouse database.",
       );
     }
     await sendEmail(
@@ -211,7 +273,10 @@ Deno.serve(async (req) => {
       await sendEmail(
         staffEmail,
         "New lawyer volunteer sign-up",
-        "A new lawyer volunteer sign-up was submitted. Log in to the Supabase dashboard to review.",
+        "A new lawyer volunteer sign-up was submitted.\n\n" +
+        summarize(row, LAWYER_LABELS) +
+        (row["willing_training"] ? "\nWilling to attend training: yes" : "") +
+        "\n\nThe authoritative record is in the Clearinghouse database.",
       );
     }
     await sendEmail(

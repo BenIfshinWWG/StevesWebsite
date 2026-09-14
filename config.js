@@ -7,20 +7,13 @@
        on the server, never here)
 
    Until BOTH values are filled in, the forms stay inert: submitting shows a
-   "not connected yet" notice and sends nothing. Fill these in after you
-   complete SETUP.md, then commit + push.
-
-   Both values for this project are already known and recorded in SETUP.md
-   step 5. They are left blank here ON PURPOSE until the Edge Function is
-   deployed and its secrets are set: filling them in first would give visitors
-   forms that render and then fail on submit, which is worse than the honest
-   "not connected" notice.
+   "not connected yet" notice and sends nothing. Blank them out to take the
+   forms offline without deploying any other change.
 --------------------------------------------------------------------------- */
 window.CLEARINGHOUSE_CONFIG = {
-  // Your deployed Supabase Edge Function URL, e.g.
-  //   https://YOUR-PROJECT-REF.supabase.co/functions/v1/submit
-  functionUrl: "",
+  // Deployed Supabase Edge Function URL.
+  functionUrl: "https://retewbijfzkwpistzkpl.supabase.co/functions/v1/submit",
 
-  // Your Cloudflare Turnstile SITE key (public).
-  turnstileSiteKey: "",
+  // Cloudflare Turnstile SITE key (public).
+  turnstileSiteKey: "0x4AAAAAAEjQAK379tHdny5T",
 };

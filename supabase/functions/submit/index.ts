@@ -125,6 +125,7 @@ const CITIZEN_LABELS: Array<[string, string]> = [
   ["represented", "Already represented by a lawyer"],
   ["represented_reason", "Why they are seeking a lawyer anyway"],
   ["other_info", "Anything else"],
+  ["ack_need", "Attested they cannot afford a lawyer and could not retain one"],
 ];
 
 const LAWYER_LABELS: Array<[string, string]> = [
@@ -146,8 +147,16 @@ const LAWYER_LABELS: Array<[string, string]> = [
 // the email stays short and scannable rather than a wall of empty fields.
 function summarize(row: Record<string, unknown>, labels: Array<[string, string]>): string {
   return labels
-    .filter(([field]) => row[field] !== null && row[field] !== undefined && row[field] !== "")
-    .map(([field, label]) => `${label}: ${row[field]}`)
+    // Drop blanks, and drop `false` too: the boolean labels are affirmative
+    // statements, so an unchecked optional box means "did not say", not "no".
+    .filter(([field]) =>
+      row[field] !== null && row[field] !== undefined &&
+      row[field] !== "" && row[field] !== false
+    )
+    .map(([field, label]) => {
+      const v = row[field];
+      return `${label}: ${typeof v === "boolean" ? (v ? "yes" : "no") : String(v)}`;
+    })
     .join("\n");
 }
 
@@ -199,6 +208,7 @@ Deno.serve(async (req) => {
     for (const f of CITIZEN_FIELDS) row[f] = clean(payload[f]);
     row["ack_disclaimer"] = bool(payload["ack_disclaimer"]);
     row["ack_consent"] = bool(payload["ack_consent"]);
+    row["ack_need"] = bool(payload["ack_need"]);
 
     if (!row["full_name"] || !row["email"] || !row["phone"] || !row["location"] ||
         !row["case_status"] || !row["ack_disclaimer"] || !row["ack_consent"]) {

@@ -211,7 +211,8 @@ Deno.serve(async (req) => {
     row["ack_need"] = bool(payload["ack_need"]);
 
     if (!row["full_name"] || !row["email"] || !row["phone"] || !row["location"] ||
-        !row["case_status"] || !row["ack_disclaimer"] || !row["ack_consent"]) {
+        !row["case_status"] || !row["ack_disclaimer"] || !row["ack_consent"] ||
+        !row["represented"] || !row["ack_need"]) {
       return json(req, 400, { error: "Missing required fields." });
     }
 

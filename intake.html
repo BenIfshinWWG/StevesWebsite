@@ -314,18 +314,17 @@
             </div>
           </div>
 
-          <!-- ABILITY TO PAY (optional) -->
+          <!-- ABILITY TO PAY -->
           <div class="field">
             <div class="checkbox-group">
               <div class="checkbox-option">
-                <input type="checkbox" id="ack-need" name="ack_need" value="yes" aria-describedby="ack-need-hint" />
+                <input type="checkbox" id="ack-need" name="ack_need" value="yes" required />
                 <label for="ack-need">
                   I do not have sufficient funds to pay for a lawyer to represent me in this case
-                  and have tried and been unable to retain a lawyer.
+                  and have tried and been unable to retain a lawyer. <span class="req">*</span>
                 </label>
               </div>
             </div>
-            <span class="hint" id="ack-need-hint">Optional. Leaving this unchecked will not stop you from submitting this form.</span>
           </div>
         </fieldset>
 

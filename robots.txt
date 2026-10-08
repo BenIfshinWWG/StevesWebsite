@@ -1,3 +1,7 @@
-# Draft preview — keep out of search engines until launch.
 User-agent: *
-Disallow: /
+Allow: /
+
+# The post-submission pages are dead ends with no standalone content, and a
+# person searching for help should never land on one instead of the form.
+Disallow: /intake-confirmation.html
+Disallow: /lawyer-confirmation.html
